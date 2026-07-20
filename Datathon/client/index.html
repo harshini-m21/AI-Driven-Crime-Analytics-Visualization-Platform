@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KSP AI-Driven Crime Analytics & Visualization Platform</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Leaflet GIS Map CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+    <!-- Custom Styles -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="dark-theme">
+    <!-- Top Decorative Cyber Grid -->
+    <div class="cyber-grid-overlay"></div>
+    <div class="glow-bg-radial"></div>
+
+    <div class="app-container">
+        <!-- SIDEBAR NAVIGATION -->
+        <aside class="sidebar-aside" id="sidebar">
+            <div class="sidebar-brand">
+                <div class="ksp-logo">
+                    <i class="fa-solid fa-shield-halved logo-icon"></i>
+                    <span class="logo-pulse"></span>
+                </div>
+                <div class="brand-text">
+                    <h1>KARNATAKA STATE POLICE</h1>
+                    <p>CRIME INTELLIGENCE PORTAL</p>
+                </div>
+            </div>
+            
+            <div class="system-status-indicator">
+                <span class="status-dot pulsing"></span>
+                <span class="status-text font-telemetry">SECURE SEC / AI-SYNC ACTIVE</span>
+            </div>
+
+            <nav class="sidebar-nav">
+                <ul>
+                    <li class="nav-item active" data-view="dashboard">
+                        <a href="#"><i class="fa-solid fa-chart-line"></i> <span>Dashboard</span></a>
+                    </li>
+                    <li class="nav-item" data-view="records">
+                        <a href="#"><i class="fa-solid fa-folder-open"></i> <span>Crime Records</span></a>
+                    </li>
+                    <li class="nav-item" data-view="map-view">
+                        <a href="#"><i class="fa-solid fa-map-location-dot"></i> <span>Crime Map</span></a>
+                    </li>
+                    <li class="nav-item" data-view="network">
+                        <a href="#"><i class="fa-solid fa-circle-nodes"></i> <span>Network Analysis</span></a>
+                    </li>
+                    <li class="nav-item" data-view="predictive">
+                        <a href="#"><i class="fa-solid fa-brain"></i> <span>Predictive Analytics</span></a>
+                    </li>
+                    <li class="nav-item" data-view="offenders">
+                        <a href="#"><i class="fa-solid fa-id-card-clip"></i> <span>Repeat Offenders</span></a>
+                    </li>
+                    <li class="nav-item" data-view="reports">
+                        <a href="#"><i class="fa-solid fa-file-invoice"></i> <span>Reports</span></a>
+                    </li>
+                    <li class="nav-item" data-view="ai-assistant">
+                        <a href="#"><i class="fa-solid fa-robot"></i> <span>AI Assistant</span></a>
+                    </li>
+                    <li class="nav-item" data-view="alerts">
+                        <a href="#"><i class="fa-solid fa-triangle-exclamation"></i> <span>Alerts Center</span><span class="badge badge-alert" id="alerts-badge-count">4</span></a>
+                    </li>
+                    <li class="nav-item" data-view="settings">
+                        <a href="#"><i class="fa-solid fa-gears"></i> <span>Settings</span></a>
+                    </li>
+                </ul>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="operator-profile">
+                    <div class="avatar-placeholder">
+                        <i class="fa-solid fa-user-shield"></i>
+                    </div>
+                    <div class="profile-info">
+                        <p class="profile-name">Command Center 01</p>
+                        <p class="profile-role">Intelligence Officer</p>
+                    </div>
+                    <button class="logout-btn" title="Lock Console" onclick="alert('Locking Console... Simulated authorization reset.')"><i class="fa-solid fa-lock"></i></button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- MAIN WINDOW WRAPPER -->
+        <main class="main-content">
+            <!-- TOP NAV BAR -->
+            <header class="top-navbar">
+                <button class="toggle-sidebar-btn" id="toggle-sidebar"><i class="fa-solid fa-bars"></i></button>
+                
+                <!-- SEARCH PANEL -->
+                <div class="global-search-container">
+                    <i class="fa-solid fa-magnifying-glass search-icon"></i>
+                    <input type="text" id="global-search-input" placeholder="Search FIR, Criminal ID, Name, Phone, Vehicle, District...">
+                    <button class="search-clear-btn" id="search-clear" style="display:none;"><i class="fa-solid fa-xmark"></i></button>
+                    <div class="search-dropdown" id="search-dropdown-results" style="display:none;">
+                        <!-- Dynamic search results render here -->
+                    </div>
+                </div>
+
+                <div class="header-right-controls">
+                    <div class="telemetry-badge font-telemetry">
+                        <span class="label">SECURE LEVEL:</span>
+                        <span class="value cyan-text">SECRET</span>
+                    </div>
+                    <div class="telemetry-badge font-telemetry hide-mobile">
+                        <span class="label">GIS FEED:</span>
+                        <span class="value success-text">ONLINE</span>
+                    </div>
+                    
+                    <div class="alert-notifications-trigger" id="alert-trigger">
+                        <i class="fa-solid fa-bell bell-icon"></i>
+                        <span class="notification-indicator pulsing"></span>
+                        <div class="quick-alerts-dropdown" id="quick-alerts" style="display:none;">
+                            <div class="alerts-header">
+                                <h3>Critical Notifications</h3>
+                                <a href="#" id="view-all-alerts-link">View All</a>
+                            </div>
+                            <div class="alerts-list-scrollable" id="quick-alerts-list">
+                                <!-- Dynamic alerts render here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="system-time font-telemetry" id="clock-display">
+                        10:01:55 AM
+                    </div>
+                </div>
+            </header>
+
+            <!-- VIEWPORT WINDOWS -->
+            <div class="viewport" id="viewport-content">
+
+                <!-- 1. DASHBOARD HOME VIEW -->
+                <section class="view-panel active" id="view-dashboard">
+                    <!-- Dashboard Title -->
+                    <div class="panel-header-section">
+                        <div>
+                            <h2 class="view-title">Crime Intelligence Command Center</h2>
+                            <p class="view-subtitle">Karnataka State Police Central AI-Driven Analytics Portal</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" onclick="triggerAIDecisionReport()"><i class="fa-solid fa-wand-magic-sparkles"></i> Generate AI Intelligence Brief</button>
+                            <button class="btn btn-secondary" onclick="exportFullDashboard()"><i class="fa-solid fa-share-nodes"></i> Share</button>
+                        </div>
+                    </div>
+
+                    <!-- AI INSIGHTS TICKER -->
+                    <div class="ai-insights-ticker glass-card">
+                        <div class="ticker-label">
+                            <i class="fa-solid fa-robot"></i> <span>AI COGNITIVE FEED:</span>
+                        </div>
+                        <div class="ticker-content" id="insights-carousel">
+                            <div class="ticker-slide active">
+                                <span class="bullet alert-text">CRITICAL:</span> Anomaly detected: Burglary incidents increased by 28% in Bengaluru Rural over the last 14 days. Confidence: 94%.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- KPI METRIC GRID -->
+                    <div class="kpi-metrics-grid">
+                        <!-- KPI Card 1: Total Crimes -->
+                        <div class="kpi-card glass-card hover-glow" onclick="navigateToView('records')">
+                            <div class="kpi-card-header">
+                                <span class="kpi-title">Total Crimes</span>
+                                <div class="kpi-icon-box"><i class="fa-solid fa-handcuffs"></i></div>
+                            </div>
+                            <div class="kpi-card-value font-telemetry">12,548</div>
+                            <div class="kpi-card-footer">
+                                <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +4.2%</span>
+                                <span class="trend-period">vs last month</span>
+                            </div>
+                        </div>
+                        <!-- KPI Card 2: Active Cases -->
+                        <div class="kpi-card glass-card hover-glow" onclick="navigateToView('records')">
+                            <div class="kpi-card-header">
+                                <span class="kpi-title">Active Cases</span>
+                                <div class="kpi-icon-box cyan-text"><i class="fa-solid fa-file-shield"></i></div>
+                            </div>
+                            <div class="kpi-card-value font-telemetry">2,143</div>
+                            <div class="kpi-card-footer">
+                                <span class="trend-indicator trend-down"><i class="fa-solid fa-arrow-trend-down"></i> -1.8%</span>
+                                <span class="trend-period">vs last week</span>
+                            </div>
+                        </div>
+                        <!-- KPI Card 3: Solved Cases -->
+                        <div class="kpi-card glass-card hover-glow" onclick="navigateToView('records')">
+                            <div class="kpi-card-header">
+                                <span class="kpi-title">Solved Cases</span>
+                                <div class="kpi-icon-box success-text"><i class="fa-solid fa-circle-check"></i></div>
+                            </div>
+                            <div class="kpi-card-value font-telemetry">9,876</div>
+                            <div class="kpi-card-footer">
+                                <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +8.5%</span>
+                                <span class="trend-period">clearance rate</span>
+                            </div>
+                        </div>
+                        <!-- KPI Card 4: Repeat Offenders -->
+                        <div class="kpi-card glass-card hover-glow" onclick="navigateToView('offenders')">
+                            <div class="kpi-card-header">
+                                <span class="kpi-title">Repeat Offenders</span>
+                                <div class="kpi-icon-box warning-text"><i class="fa-solid fa-users-viewfinder"></i></div>
+                            </div>
+                            <div class="kpi-card-value font-telemetry">412</div>
+                            <div class="kpi-card-footer">
+                                <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +12%</span>
+                                <span class="trend-period">linked in networks</span>
+                            </div>
+                        </div>
+                        <!-- KPI Card 5: High Risk Districts -->
+                        <div class="kpi-card glass-card hover-glow" onclick="navigateToView('map-view')">
+                            <div class="kpi-card-header">
+                                <span class="kpi-title">High Risk Districts</span>
+                                <div class="kpi-icon-box alert-text"><i class="fa-solid fa-triangle-exclamation"></i></div>
+                            </div>
+                            <div class="kpi-card-value font-telemetry alert-text">9</div>
+                            <div class="kpi-card-footer">
+                                <span class="trend-indicator status-bad"><i class="fa-solid fa-circle"></i> Flagged</span>
+                                <span class="trend-period">by GIS hot-spots</span>
+                            </div>
+                        </div>
+                        <!-- KPI Card 6: AI Prediction Score -->
+                        <div class="kpi-card glass-card hover-glow" onclick="navigateToView('predictive')">
+                            <div class="kpi-card-header">
+                                <span class="kpi-title">AI Forecast Precision</span>
+                                <div class="kpi-icon-box neon-green-text"><i class="fa-solid fa-brain"></i></div>
+                            </div>
+                            <div class="kpi-card-value font-telemetry cyan-text">96.4%</div>
+                            <div class="kpi-card-footer">
+                                <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +0.8%</span>
+                                <span class="trend-period">accuracy metric</span>
+                            </div>
+                        </div>
+                        <!-- KPI Card 7: Today's Alerts -->
+                        <div class="kpi-card glass-card hover-glow" onclick="navigateToView('alerts')">
+                            <div class="kpi-card-header">
+                                <span class="kpi-title">Today's Alerts</span>
+                                <div class="kpi-icon-box pulsing alert-text"><i class="fa-solid fa-bell"></i></div>
+                            </div>
+                            <div class="kpi-card-value font-telemetry alert-text" id="today-alerts-value">37</div>
+                            <div class="kpi-card-footer">
+                                <span class="trend-indicator trend-up"><i class="fa-solid fa-arrow-trend-up"></i> +5 new</span>
+                                <span class="trend-period">since 08:00 hrs</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DASHBOARD CONTENT ROW 1: PREVIEW GIS MAP AND CORE TRENDS -->
+                    <div class="dashboard-row grid-2-1">
+                        <div class="dashboard-column glass-card">
+                            <div class="card-header-ctrl">
+                                <h3><i class="fa-solid fa-earth-asia cyan-text"></i> Geospatial Hotspot Telemetry</h3>
+                                <button class="btn-text-nav" onclick="navigateToView('map-view')">Full Map View <i class="fa-solid fa-up-right-from-square"></i></button>
+                            </div>
+                            <div class="map-mini-container">
+                                <div id="mini-crime-map" class="map-inner"></div>
+                                <div class="map-overlay-telemetry font-telemetry">
+                                    <div class="indicator"><span class="status-dot pulsing"></span> BENGALURU CBD: HIGH DENSITY</div>
+                                    <div class="indicator"><span class="status-dot pulsing orange"></span> MYSURU HUB: CRIME SPIKE</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-column glass-card">
+                            <div class="card-header-ctrl">
+                                <h3><i class="fa-solid fa-brain cyan-text"></i> Live Anomaly Alerts</h3>
+                                <button class="btn-text-nav" onclick="navigateToView('alerts')">Alerts Center <i class="fa-solid fa-up-right-from-square"></i></button>
+                            </div>
+                            <div class="dashboard-anomalies-list" id="dashboard-anomalies">
+                                <!-- Glowing red/orange anomaly cards dynamically inserted -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DASHBOARD ROW 2: PRIMARY CHARTS -->
+                    <div class="dashboard-row grid-3">
+                        <div class="dashboard-column glass-card">
+                            <h3><i class="fa-solid fa-chart-line cyan-text"></i> Monthly Crime Trends</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-monthly-trends"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-column glass-card">
+                            <h3><i class="fa-solid fa-chart-column cyan-text"></i> Crimes by Major District</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-district-crimes"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="dashboard-column glass-card">
+                            <h3><i class="fa-solid fa-chart-pie cyan-text"></i> Crime Category Distribution</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-category-distribution"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DASHBOARD ROW 3: DETAILED SPLIT -->
+                    <div class="dashboard-row grid-2">
+                        <div class="dashboard-column glass-card">
+                            <h3><i class="fa-solid fa-clock cyan-text"></i> Crimes by Time of Day (Temporal Wave)</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-temporal-wave"></canvas>
+                            </div>
+                        </div>
+                        
+                        <div class="dashboard-column glass-card">
+                            <h3><i class="fa-solid fa-circle-notch cyan-text"></i> Investigation Clearance vs Arrest Rates</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-arrest-clearance"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 2. CRIME RECORDS VIEW -->
+                <section class="view-panel" id="view-records">
+                    <div class="panel-header-section">
+                        <div>
+                            <h2 class="view-title">Crime Records Database</h2>
+                            <p class="view-subtitle">Consolidated First Information Report (FIR) & Incident Telemetry</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="exportDataExcel()"><i class="fa-solid fa-file-excel"></i> Export Excel</button>
+                            <button class="btn btn-secondary" onclick="exportDataPDF()"><i class="fa-solid fa-file-pdf"></i> Export PDF</button>
+                        </div>
+                    </div>
+
+                    <!-- FILTER WORKBENCH -->
+                    <div class="filter-workbench glass-card">
+                        <div class="filter-workbench-title"><i class="fa-solid fa-filter"></i> Advanced Intelligence Filters</div>
+                        <div class="filter-grid">
+                            <div class="filter-control">
+                                <label for="filter-district">District</label>
+                                <select id="filter-district">
+                                    <option value="all">All Districts</option>
+                                </select>
+                            </div>
+                            <div class="filter-control">
+                                <label for="filter-station">Police Station</label>
+                                <select id="filter-station">
+                                    <option value="all">All Stations</option>
+                                </select>
+                            </div>
+                            <div class="filter-control">
+                                <label for="filter-crime-type">Crime Category</label>
+                                <select id="filter-crime-type">
+                                    <option value="all">All Categories</option>
+                                    <option value="Cybercrime">Cybercrime</option>
+                                    <option value="Burglary">Burglary</option>
+                                    <option value="Assault">Assault</option>
+                                    <option value="Narcotics">Narcotics</option>
+                                    <option value="Robbery">Robbery</option>
+                                    <option value="Financial Fraud">Financial Fraud</option>
+                                    <option value="Vehicle Theft">Vehicle Theft</option>
+                                </select>
+                            </div>
+                            <div class="filter-control">
+                                <label for="filter-severity">Severity Rating</label>
+                                <select id="filter-severity">
+                                    <option value="all">All Levels</option>
+                                    <option value="High">High (Level 3)</option>
+                                    <option value="Medium">Medium (Level 2)</option>
+                                    <option value="Low">Low (Level 1)</option>
+                                </select>
+                            </div>
+                            <div class="filter-control">
+                                <label for="filter-status">Investigation Status</label>
+                                <select id="filter-status">
+                                    <option value="all">All Statuses</option>
+                                    <option value="Under Investigation">Under Investigation</option>
+                                    <option value="Solved">Solved / Closed</option>
+                                    <option value="Cold Case">Cold Case</option>
+                                    <option value="Arrested">Arrested</option>
+                                </select>
+                            </div>
+                            <div class="filter-control">
+                                <label for="filter-date">Date Threshold</label>
+                                <select id="filter-date">
+                                    <option value="all">All Records</option>
+                                    <option value="today">Today (Last 24 hrs)</option>
+                                    <option value="week">Past 7 Days</option>
+                                    <option value="month">Past 30 Days</option>
+                                </select>
+                            </div>
+                            <div class="filter-control">
+                                <label for="filter-weapon">Weapon Type</label>
+                                <select id="filter-weapon">
+                                    <option value="all">All Types</option>
+                                    <option value="None">None</option>
+                                    <option value="Firearm">Firearm</option>
+                                    <option value="Sharp Weapon">Sharp Weapon</option>
+                                    <option value="Blunt Object">Blunt Object</option>
+                                    <option value="Digital Malware">Digital Malware</option>
+                                </select>
+                            </div>
+                            <div class="filter-control reset-cell">
+                                <label>&nbsp;</label>
+                                <button class="btn btn-danger btn-full" id="btn-reset-filters"><i class="fa-solid fa-filter-circle-xmark"></i> Clear Filters</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RECORDS TABLE CONTAINER -->
+                    <div class="records-table-container glass-card">
+                        <div class="table-telemetry-header">
+                            <div class="telemetry-left">
+                                Showing <span id="records-visible-count" class="cyan-text font-telemetry">0</span> of <span id="records-total-count" class="font-telemetry">0</span> First Information Reports (FIRs)
+                            </div>
+                            <div class="telemetry-right">
+                                <span class="table-sync-badge"><i class="fa-solid fa-arrows-rotate spinner hide"></i> Live Sync Feed</span>
+                            </div>
+                        </div>
+                        <div class="table-responsive-wrapper">
+                            <table class="ksp-data-table" id="fir-records-table">
+                                <thead>
+                                    <tr>
+                                        <th>FIR Number</th>
+                                        <th>Criminal ID</th>
+                                        <th>Offender Name</th>
+                                        <th>Crime Type</th>
+                                        <th>District</th>
+                                        <th>Police Station</th>
+                                        <th>Date & Time</th>
+                                        <th>Weapon</th>
+                                        <th>Severity</th>
+                                        <th>Status</th>
+                                        <th class="actions-col">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="fir-records-tbody">
+                                    <!-- Dynamic rows loaded by JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 3. CRIME MAP VIEW -->
+                <section class="view-panel" id="view-map-view">
+                    <div class="map-view-layout">
+                        <!-- Main Map Panel -->
+                        <div class="map-main-pane glass-card">
+                            <div class="map-view-header">
+                                <h3><i class="fa-solid fa-map-location-dot cyan-text"></i> Karnataka GIS Spatial Heatmap</h3>
+                                <div class="map-telemetry font-telemetry">
+                                    <span class="active-badge"><i class="fa-solid fa-satellite pulsing"></i> KSP-GIS FEED ACTIVE</span>
+                                </div>
+                            </div>
+                            <div id="full-gis-map" class="full-map-container"></div>
+                        </div>
+                        
+                        <!-- Map Sidebar Controls -->
+                        <div class="map-sidebar-pane glass-card">
+                            <h3>Map Visualization Controls</h3>
+                            <div class="map-ctrl-section">
+                                <label class="ctrl-section-label">Layer Presets</label>
+                                <div class="toggle-control-group">
+                                    <label class="toggle-btn-label">
+                                        <input type="checkbox" id="layer-heatmap" checked>
+                                        <span>Show Hotspot Heatmap</span>
+                                    </label>
+                                    <label class="toggle-btn-label">
+                                        <input type="checkbox" id="layer-stations" checked>
+                                        <span>Show Police Stations</span>
+                                    </label>
+                                    <label class="toggle-btn-label">
+                                        <input type="checkbox" id="layer-risk-rings" checked>
+                                        <span>High Risk Pulsing Districts</span>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="map-ctrl-section">
+                                <label class="ctrl-section-label">Crime Filter Map</label>
+                                <div class="map-filter-group">
+                                    <label for="map-filter-category">Category</label>
+                                    <select id="map-filter-category" class="select-cyber">
+                                        <option value="all">All Crimes</option>
+                                        <option value="Cybercrime">Cybercrime</option>
+                                        <option value="Burglary">Burglary</option>
+                                        <option value="Assault">Assault</option>
+                                        <option value="Narcotics">Narcotics</option>
+                                        <option value="Robbery">Robbery</option>
+                                        <option value="Financial Fraud">Financial Fraud</option>
+                                        <option value="Vehicle Theft">Vehicle Theft</option>
+                                    </select>
+                                </div>
+                                <div class="map-filter-group">
+                                    <label for="map-filter-time">Time Range</label>
+                                    <select id="map-filter-time" class="select-cyber">
+                                        <option value="all">Full Period</option>
+                                        <option value="day">Day Shift (06:00 - 18:00)</option>
+                                        <option value="night">Night Shift (18:00 - 06:00)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="map-ctrl-section">
+                                <label class="ctrl-section-label">Critical High-Risk Districts (GIS Heat Alert)</label>
+                                <div class="high-risk-list-panel font-telemetry" id="map-high-risk-districts-list">
+                                    <!-- Dynamic list of pulsing districts -->
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 4. NETWORK ANALYSIS VIEW -->
+                <section class="view-panel" id="view-network">
+                    <div class="panel-header-section">
+                        <div>
+                            <h2 class="view-title">Criminal Network & Association Analysis</h2>
+                            <p class="view-subtitle">AI Link Analysis for Suspects, Vehicles, Weapons, Mobiles, and Bank Accounts</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn btn-primary" id="btn-hidden-scan" onclick="triggerHiddenNetworkScan()"><i class="fa-solid fa-satellite-dish pulsing"></i> Detect Hidden Associations</button>
+                        </div>
+                    </div>
+
+                    <div class="network-layout">
+                        <!-- Interactive Network Graph Workspace -->
+                        <div class="network-canvas-pane glass-card">
+                            <div class="canvas-controls">
+                                <div class="control-tag font-telemetry">ENTITIES: <span id="node-count-span">34</span> | LINKS: <span id="link-count-span">48</span></div>
+                                <div class="zoom-buttons">
+                                    <button class="btn-icon" onclick="adjustNetworkZoom(1.1)" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
+                                    <button class="btn-icon" onclick="adjustNetworkZoom(0.9)" title="Zoom Out"><i class="fa-solid fa-minus"></i></button>
+                                    <button class="btn-icon" onclick="resetNetworkView()" title="Reset Node Layout"><i class="fa-solid fa-arrows-to-dot"></i></button>
+                                </div>
+                            </div>
+
+                            <div class="legend-panel font-telemetry">
+                                <div class="legend-item"><span class="legend-dot color-suspect"></span> Suspect</div>
+                                <div class="legend-item"><span class="legend-dot color-victim"></span> Victim</div>
+                                <div class="legend-item"><span class="legend-dot color-location"></span> Location</div>
+                                <div class="legend-item"><span class="legend-dot color-vehicle"></span> Vehicle</div>
+                                <div class="legend-item"><span class="legend-dot color-weapon"></span> Weapon</div>
+                                <div class="legend-item"><span class="legend-dot color-mobile"></span> Phone</div>
+                                <div class="legend-item"><span class="legend-dot color-bank"></span> Bank Acc</div>
+                            </div>
+                            
+                            <!-- CANVAS GRAPH -->
+                            <div class="network-canvas-wrapper">
+                                <canvas id="network-canvas" width="800" height="500"></canvas>
+                                <!-- Scan Overlay Sweep Animation -->
+                                <div class="scanner-sweep-grid" id="network-scan-overlay" style="display:none;">
+                                    <div class="scan-laser-line"></div>
+                                    <div class="scan-telemetry font-telemetry">
+                                        <p class="blink alert-text">SCANNING CRIMINAL DATABASES...</p>
+                                        <p id="scan-progress-text">ANALYZING LINK CORRELATIONS [0%]</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Details Inspector Panel -->
+                        <div class="network-details-pane glass-card" id="network-inspector-panel">
+                            <div class="inspector-empty" id="inspector-placeholder-text">
+                                <i class="fa-solid fa-circle-info info-icon"></i>
+                                <h4>Entity Profile Inspector</h4>
+                                <p>Click any node in the network graph to inspect linked metadata, associated cases, and AI intelligence analysis.</p>
+                            </div>
+                            <div class="inspector-content hide" id="inspector-main-content">
+                                <div class="inspector-card-header">
+                                    <div class="entity-avatar-large" id="ins-avatar-box">
+                                        <i class="fa-solid fa-user-tag" id="ins-icon"></i>
+                                    </div>
+                                    <div class="entity-title-box">
+                                        <h3 id="ins-name">Rahul Sharma</h3>
+                                        <p class="entity-sub font-telemetry" id="ins-meta-subtitle">ID: KSP-CR-9921</p>
+                                    </div>
+                                </div>
+
+                                <div class="inspector-body">
+                                    <!-- Dynamic sections go here -->
+                                    <div class="inspector-meta-block">
+                                        <span class="meta-label">Primary Entity Type:</span>
+                                        <span class="meta-val font-telemetry" id="ins-type">Suspect</span>
+                                    </div>
+                                    <div class="inspector-meta-block">
+                                        <span class="meta-label">Recidivism / Link Score:</span>
+                                        <span class="meta-val font-telemetry alert-text" id="ins-score">84%</span>
+                                    </div>
+                                    <div class="inspector-meta-block">
+                                        <span class="meta-label">Associated Cases (FIRs):</span>
+                                        <span class="meta-val font-telemetry" id="ins-cases">FIR-2026-Bengaluru-401, FIR-2026-Mysuru-203</span>
+                                    </div>
+
+                                    <div class="inspector-divider"></div>
+
+                                    <h4 class="inspector-section-title"><i class="fa-solid fa-network-wired"></i> Direct Connections</h4>
+                                    <div class="inspector-connections-list" id="ins-direct-connections">
+                                        <!-- Connections dynamically populated -->
+                                    </div>
+
+                                    <div class="inspector-divider"></div>
+
+                                    <h4 class="inspector-section-title"><i class="fa-solid fa-brain"></i> AI Behavioral Deduction</h4>
+                                    <div class="ai-speech-bubble" id="ins-ai-deduction">
+                                        Subject Rahul Sharma exhibits tight correlations with vehicle KA-03-MY-9942 and a known weapon. High likelihood of association with organized heist syndicates.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 5. PREDICTIVE ANALYTICS VIEW -->
+                <section class="view-panel" id="view-predictive">
+                    <div class="panel-header-section">
+                        <div>
+                            <h2 class="view-title">Predictive Policing Dashboard</h2>
+                            <p class="view-subtitle">AI Forecasting & Resource Optimization Recommendations</p>
+                        </div>
+                        <div class="header-actions">
+                            <span class="confidence-badge font-telemetry"><i class="fa-solid fa-microchip"></i> GLOBAL MODEL CONFIDENCE: 96.4%</span>
+                        </div>
+                    </div>
+
+                    <!-- PREDICTIVE HIGHLIGHT WIDGETS -->
+                    <div class="predictive-widgets-row">
+                        <!-- Widget 1: Future Hotspot Prediction -->
+                        <div class="predictive-card glass-card">
+                            <div class="pred-header">
+                                <span class="pred-title">Predicted 30-Day Hotspot Spike</span>
+                                <div class="confidence-indicator font-telemetry">91% Conf.</div>
+                            </div>
+                            <div class="pred-location alert-text">Bengaluru Urban (East Zone)</div>
+                            <p class="pred-desc">Cyber-crime and digital fraud syndicates are predicted to spike due to recent phishing domains registered locally.</p>
+                            <div class="resource-pill"><i class="fa-solid fa-truck-ramp-box"></i> Task cyber units for proactive surveillance.</div>
+                        </div>
+
+                        <!-- Widget 2: Next Month Forecast -->
+                        <div class="predictive-card glass-card">
+                            <div class="pred-header">
+                                <span class="pred-title">Emerging Crime Category</span>
+                                <div class="confidence-indicator font-telemetry warning-text">88% Conf.</div>
+                            </div>
+                            <div class="pred-location warning-text">Cryptocurrency Arbitrage Scams</div>
+                            <p class="pred-desc">Multi-district financial rings are using unregistered apps to target remote districts. Alert spikes detected in Shivamogga.</p>
+                            <div class="resource-pill warning-border"><i class="fa-solid fa-bullhorn"></i> Dispatch advisory notice to rural blocks.</div>
+                        </div>
+
+                        <!-- Widget 3: Seasonal Crime Trend -->
+                        <div class="predictive-card glass-card">
+                            <div class="pred-header">
+                                <span class="pred-title">Seasonal Climatological Trend</span>
+                                <div class="confidence-indicator font-telemetry success-text">95% Conf.</div>
+                            </div>
+                            <div class="pred-location success-text">Festive Season Burglary Risk</div>
+                            <p class="pred-desc">Historical data indicates Bengaluru Rural and Mysuru experience a 24% rise in house break-ins during Dussehra/festivals.</p>
+                            <div class="resource-pill success-border"><i class="fa-solid fa-person-military-pointing"></i> Deploy 12% additional night patrols.</div>
+                        </div>
+                    </div>
+
+                    <!-- PREDICTIVE CHARTS GRID -->
+                    <div class="dashboard-row grid-2">
+                        <!-- Chart: 30 Day Crime Forecast -->
+                        <div class="dashboard-column glass-card">
+                            <h3><i class="fa-solid fa-chart-line cyan-text"></i> Crime Volume Forecast (Next 30 Days)</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-predictive-forecast"></canvas>
+                            </div>
+                            <div class="forecast-legend font-telemetry">
+                                <span class="legend-color line-solid"></span> Actual Crime Volume
+                                <span class="legend-color line-dashed"></span> AI Forecast (Mean Projection)
+                                <span class="legend-color shade-area"></span> Confidence Interval (95% bounds)
+                            </div>
+                        </div>
+
+                        <!-- Chart: Emerging Categories Risk Rating -->
+                        <div class="dashboard-column glass-card">
+                            <h3><i class="fa-solid fa-square-poll-vertical cyan-text"></i> Emerging Threat Index Matrix</h3>
+                            <div class="chart-container">
+                                <canvas id="chart-predictive-matrix"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- RESOURCE DEPLOYMENT RECOMMENDATIONS -->
+                    <div class="resource-deployment-section glass-card">
+                        <h3><i class="fa-solid fa-bolt-lightning warning-text"></i> AI-Generated Resource Deployment Suggestions</h3>
+                        <div class="table-responsive-wrapper">
+                            <table class="ksp-data-table font-telemetry">
+                                <thead>
+                                    <tr>
+                                        <th>Target Zone / District</th>
+                                        <th>Predicted Crime Type</th>
+                                        <th>Risk Score</th>
+                                        <th>Optimal Resource Allocation Shift</th>
+                                        <th>Confidence</th>
+                                        <th>Deployment Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td class="cyan-text">Bengaluru Urban (East)</td>
+                                        <td>Cyber-Financial Fraud</td>
+                                        <td class="alert-text font-bold">HIGH (9.4/10)</td>
+                                        <td>Reallocate 15% Cyber Division investigators to East precinct units.</td>
+                                        <td>94%</td>
+                                        <td><span class="badge badge-warning">PENDING APPROVAL</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cyan-text">Mysuru CBD</td>
+                                        <td>Commercial Break-in</td>
+                                        <td class="warning-text font-bold">MEDIUM (7.2/10)</td>
+                                        <td>Deploy 8 additional night patrol cars with GPS monitoring from 22:00 to 05:00.</td>
+                                        <td>89%</td>
+                                        <td><span class="badge badge-success">DISPATCHED</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cyan-text">Shivamogga Rural</td>
+                                        <td>Smuggling & Illegal Logging</td>
+                                        <td class="warning-text font-bold">MEDIUM (6.8/10)</td>
+                                        <td>Task forest division checkpoint officers with targeted cargo scanning.</td>
+                                        <td>85%</td>
+                                        <td><span class="badge badge-success">ACTIVE</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td class="cyan-text">Belagavi Urban</td>
+                                        <td>Vehicle Heists</td>
+                                        <td class="alert-text font-bold">HIGH (8.9/10)</td>
+                                        <td>Establish 4 mobile roadblocks at border junctions checkposts.</td>
+                                        <td>92%</td>
+                                        <td><span class="badge badge-warning">PENDING APPROVAL</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 6. REPEAT OFFENDERS DASHBOARD -->
+                <section class="view-panel" id="view-offenders">
+                    <div class="offender-dashboard-layout">
+                        <!-- Offender Selector Sidebar -->
+                        <div class="offender-list-pane glass-card">
+                            <div class="search-offender-box">
+                                <i class="fa-solid fa-magnifying-glass"></i>
+                                <input type="text" id="offender-search-input" placeholder="Search offenders list...">
+                            </div>
+                            <div class="offenders-list-scroll" id="offender-profiles-list">
+                                <!-- Populated dynamically by JS -->
+                            </div>
+                        </div>
+
+                        <!-- Offender Selected Detail Panel -->
+                        <div class="offender-details-pane glass-card" id="offender-details-view">
+                            <!-- Populated dynamically when offender is clicked -->
+                            <div class="details-empty" id="offender-details-placeholder">
+                                <i class="fa-solid fa-id-card-clip logo-large"></i>
+                                <h3>Select a Repeat Offender</h3>
+                                <p>Choose an offender from the sidebar to inspect their biometric identification, complete criminal history timeline, modus operandi, risk parameters, and linked network entities.</p>
+                            </div>
+
+                            <div class="offender-profile-main hide" id="offender-profile-main">
+                                <div class="profile-header-banner">
+                                    <div class="biometric-photo-container">
+                                        <!-- Glowing Scanner Frame -->
+                                        <div class="biometric-scan-line"></div>
+                                        <img src="" alt="Criminal Biometric Profile" id="offender-photo" class="criminal-photo">
+                                        <div class="biometric-crosshairs"></div>
+                                    </div>
+                                    <div class="profile-header-meta">
+                                        <div class="name-id-row">
+                                            <h2 id="offender-name">Vikram "Vicky" Gowda</h2>
+                                            <span class="crim-badge font-telemetry" id="offender-id">KSP-CR-9912</span>
+                                        </div>
+                                        <p class="aliases font-telemetry">ALIASES: <span id="offender-aliases">Vicky, Bangalore Heist King</span></p>
+                                        
+                                        <div class="offender-score-cards">
+                                            <div class="score-card">
+                                                <span class="sc-label">RE-OFFEND RISK</span>
+                                                <span class="sc-val font-telemetry alert-text" id="offender-recidivism-score">94%</span>
+                                            </div>
+                                            <div class="score-card">
+                                                <span class="sc-label">TOTAL CONVICTIONS</span>
+                                                <span class="sc-val font-telemetry" id="offender-convictions">8</span>
+                                            </div>
+                                            <div class="score-card">
+                                                <span class="sc-label">NETWORK LINKS</span>
+                                                <span class="sc-val font-telemetry cyan-text" id="offender-network-links-count">14</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="offender-grid-content">
+                                    <!-- Left side details -->
+                                    <div class="offender-col-left">
+                                        <!-- Behavioral summary -->
+                                        <div class="behavioral-summary-block">
+                                            <h4><i class="fa-solid fa-robot"></i> AI Behavioral Analysis Summary</h4>
+                                            <p id="offender-ai-summary" class="ai-text">Subject shows high frequency of nighttime operations. Modus Operandi includes scoping out luxury villas. Linked with digital cyber transfers post robberies. Operates across multi-district borders to avoid jurisdictional pursuit.</p>
+                                        </div>
+                                        
+                                        <!-- Profile details -->
+                                        <div class="profile-details-table font-telemetry">
+                                            <div class="p-row">
+                                                <span class="p-lbl">Gender / Age:</span>
+                                                <span class="p-val" id="offender-age-gender">Male / 38 Yrs</span>
+                                            </div>
+                                            <div class="p-row">
+                                                <span class="p-lbl">Primary District:</span>
+                                                <span class="p-val" id="offender-primary-district">Bengaluru Rural</span>
+                                            </div>
+                                            <div class="p-row">
+                                                <span class="p-lbl">Modus Operandi:</span>
+                                                <span class="p-val alert-text" id="offender-modus-operandi">Armed vault robbery</span>
+                                            </div>
+                                            <div class="p-row">
+                                                <span class="p-lbl">Associated Weapons:</span>
+                                                <span class="p-val" id="offender-associated-weapons">Sharp blades, Handgun</span>
+                                            </div>
+                                            <div class="p-row">
+                                                <span class="p-lbl">Status:</span>
+                                                <span class="p-val" id="offender-status">Active / Wanted</span>
+                                            </div>
+                                        </div>
+
+                                        <!-- Linked Associates list -->
+                                        <div class="associates-network-block">
+                                            <h4><i class="fa-solid fa-users"></i> Linked Network Associates</h4>
+                                            <div class="associates-inline-list" id="offender-associates-list">
+                                                <!-- Dyn pop -->
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <!-- Right side timeline -->
+                                    <div class="offender-col-right">
+                                        <h4><i class="fa-solid fa-timeline"></i> Criminal Activity Timeline</h4>
+                                        <div class="crime-timeline" id="offender-timeline">
+                                            <!-- Dynamically filled with timeline items -->
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 7. REPORTS VIEW -->
+                <section class="view-panel" id="view-reports">
+                    <div class="panel-header-section">
+                        <div>
+                            <h2 class="view-title">Crime Intelligence Reports Generator</h2>
+                            <p class="view-subtitle">Generate official Karnataka State Police analytical briefs & statistics</p>
+                        </div>
+                    </div>
+
+                    <div class="reports-generation-layout grid-1-2">
+                        <!-- Left report selectors -->
+                        <div class="reports-selector-card glass-card">
+                            <h3>Configure Report Output</h3>
+                            <div class="report-form-group">
+                                <label for="report-type-select">Report Template</label>
+                                <select id="report-type-select" class="select-cyber">
+                                    <option value="district">District Analytics Brief</option>
+                                    <option value="monthly">Monthly Crime Summary Report</option>
+                                    <option value="crime-type">Crime Category Specific Report</option>
+                                    <option value="officer">Officer Performance Metric Report</option>
+                                    <option value="investigation">Investigation Status Audit Report</option>
+                                    <option value="ai-rec">AI Strategic Recommendation Brief</option>
+                                </select>
+                            </div>
+                            <div class="report-form-group">
+                                <label for="report-district-select">Target Jurisdiction</label>
+                                <select id="report-district-select" class="select-cyber">
+                                    <option value="all">Entire State (Karnataka)</option>
+                                    <option value="Bengaluru Urban">Bengaluru Urban</option>
+                                    <option value="Mysuru">Mysuru</option>
+                                    <option value="Belagavi">Belagavi</option>
+                                </select>
+                            </div>
+                            <div class="report-form-group">
+                                <label for="report-period-select">Reporting Period</label>
+                                <select id="report-period-select" class="select-cyber">
+                                    <option value="current">Current Month (July 2026)</option>
+                                    <option value="q2">Q2 FY 2026-27</option>
+                                    <option value="annual">Annual Summary (Past 12 Months)</option>
+                                </select>
+                            </div>
+                            <div class="report-options-checkboxes">
+                                <label class="checkbox-cyber">
+                                    <input type="checkbox" id="rep-opt-confidence" checked>
+                                    <span>Include AI Confidence Scores</span>
+                                </label>
+                                <label class="checkbox-cyber">
+                                    <input type="checkbox" id="rep-opt-graph" checked>
+                                    <span>Append Suspect Link Graph Diagram</span>
+                                </label>
+                                <label class="checkbox-cyber">
+                                    <input type="checkbox" id="rep-opt-hotspots" checked>
+                                    <span>Include GIS Coordinate List</span>
+                                </label>
+                            </div>
+
+                            <button class="btn btn-primary btn-full margin-t-20" onclick="generateSelectedReport()">
+                                <i class="fa-solid fa-gears"></i> Build Report Draft
+                            </button>
+                        </div>
+
+                        <!-- Right Report Preview Panel -->
+                        <div class="reports-preview-card glass-card">
+                            <div class="preview-header">
+                                <h3><i class="fa-solid fa-file-invoice cyan-text"></i> Interactive Report Draft Preview</h3>
+                                <div class="preview-actions">
+                                    <button class="btn btn-secondary btn-sm" onclick="printReport()"><i class="fa-solid fa-print"></i> Print / PDF</button>
+                                    <button class="btn btn-secondary btn-sm" onclick="exportReportCSV()"><i class="fa-solid fa-file-excel"></i> Export CSV</button>
+                                </div>
+                            </div>
+
+                            <!-- Document Draft Body -->
+                            <div class="report-document-body" id="report-document-body">
+                                <!-- Populated dynamically based on generator. Formatted as printable government style -->
+                                <div class="report-preloader">
+                                    <i class="fa-solid fa-clipboard-list font-large opacity-5"></i>
+                                    <p>Select settings and click 'Build Report Draft' to load intelligence document.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 8. AI ASSISTANT PANEL (CHATBOT) -->
+                <section class="view-panel" id="view-ai-assistant">
+                    <div class="panel-header-section">
+                        <div>
+                            <h2 class="view-title">KSP Command AI Chatbot Assistant</h2>
+                            <p class="view-subtitle">Interactive Query Interface for State Crime Databases & Predictions</p>
+                        </div>
+                    </div>
+
+                    <div class="ai-assistant-container glass-card">
+                        <!-- Left pane: Sample queries list -->
+                        <div class="ai-assist-sidebar">
+                            <h4>Suggested Tactical Queries</h4>
+                            <ul class="suggested-queries-list">
+                                <li onclick="askChatAssistant('Show burglary cases in Mysuru.')"><i class="fa-solid fa-magnifying-glass-chart"></i> "Show burglary cases in Mysuru."</li>
+                                <li onclick="askChatAssistant('Find repeat offenders.')"><i class="fa-solid fa-users-viewfinder"></i> "Find repeat offenders."</li>
+                                <li onclick="askChatAssistant('Display hotspots this week.')"><i class="fa-solid fa-map-location-dot"></i> "Display hotspots this week."</li>
+                                <li onclick="askChatAssistant('Predict tomorrow\'s crime risk.')"><i class="fa-solid fa-brain"></i> "Predict tomorrow's crime risk."</li>
+                                <li onclick="askChatAssistant('Show crime trend for Bengaluru.')"><i class="fa-solid fa-chart-line"></i> "Show crime trend for Bengaluru."</li>
+                            </ul>
+
+                            <div class="ai-model-stats font-telemetry">
+                                <div class="stat-row">
+                                    <span>Model:</span>
+                                    <span class="cyan-text">KSP-Intellect v3.5-Medium</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Latency:</span>
+                                    <span class="success-text">140ms</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Knowledge Cutoff:</span>
+                                    <span>July 2026</span>
+                                </div>
+                                <div class="stat-row">
+                                    <span>Auth Level:</span>
+                                    <span class="alert-text font-bold">CONFIDENTIAL</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Right pane: Chat interface -->
+                        <div class="ai-assist-chat-interface">
+                            <!-- Chat message log -->
+                            <div class="chat-messages-log" id="chat-messages-log">
+                                <div class="chat-message bot">
+                                    <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                                    <div class="msg-content">
+                                        <p>Secure connection established. I am the KSP Crime Intelligence AI Assistant.</p>
+                                        <p>You can query incidents, suspect networks, predictive models, and hotspots. How can I assist with your deployment/investigation tasks today?</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Chat input bar -->
+                            <div class="chat-input-bar">
+                                <input type="text" id="chat-user-input" placeholder="Type tactical command or query (e.g. 'Show cybercrime in Bengaluru')...">
+                                <button class="btn btn-primary" id="btn-chat-send"><i class="fa-solid fa-paper-plane"></i> Send</button>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 9. ALERTS CENTER -->
+                <section class="view-panel" id="view-alerts">
+                    <div class="panel-header-section">
+                        <div>
+                            <h2 class="view-title">Real-Time Threat Alerts Center</h2>
+                            <p class="view-subtitle">Live Incident Spikes, High-Risk Detections, and Network Deviations</p>
+                        </div>
+                        <div class="header-actions">
+                            <button class="btn btn-secondary" onclick="clearAllNotifications()"><i class="fa-solid fa-trash-can"></i> Acknowledge All</button>
+                        </div>
+                    </div>
+
+                    <div class="alerts-center-layout grid-1-3">
+                        <!-- Left category tallies -->
+                        <div class="alerts-tally-sidebar glass-card font-telemetry">
+                            <h3>Alert Summary Tally</h3>
+                            <div class="tally-box alert-border" onclick="filterAlertsBySeverity('all')">
+                                <span class="t-title">Total Active Warnings</span>
+                                <span class="t-count cyan-text" id="tally-total-alerts">4</span>
+                            </div>
+                            <div class="tally-box red-border" onclick="filterAlertsBySeverity('critical')">
+                                <span class="t-title">🔴 High Risk Critical</span>
+                                <span class="t-count alert-text" id="tally-high-alerts">1</span>
+                            </div>
+                            <div class="tally-box orange-border" onclick="filterAlertsBySeverity('warning')">
+                                <span class="t-title">🟠 Crime Spike Alert</span>
+                                <span class="t-count warning-text" id="tally-spike-alerts">1</span>
+                            </div>
+                            <div class="tally-box yellow-border" onclick="filterAlertsBySeverity('offender')">
+                                <span class="t-title">🟡 Repeat Offender Trigger</span>
+                                <span class="t-count yellow-text" id="tally-offender-alerts">1</span>
+                            </div>
+                            <div class="tally-box blue-border" onclick="filterAlertsBySeverity('update')">
+                                <span class="t-title">🔵 Case File Update</span>
+                                <span class="t-count blue-text" id="tally-update-alerts">1</span>
+                            </div>
+                        </div>
+
+                        <!-- Right alert cards list -->
+                        <div class="alerts-feed-pane glass-card">
+                            <div class="alerts-feed-header">
+                                <h3>Current Warning Queue</h3>
+                                <div class="feed-filters">
+                                    <button class="btn-sm active" id="alert-btn-all" onclick="filterAlertsBySeverity('all')">All</button>
+                                    <button class="btn-sm" id="alert-btn-crit" onclick="filterAlertsBySeverity('critical')">Critical Only</button>
+                                </div>
+                            </div>
+
+                            <div class="alerts-scroll-queue" id="alerts-center-list">
+                                <!-- Dyn pop with rich alert cards -->
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- 10. SETTINGS VIEW -->
+                <section class="view-panel" id="view-settings">
+                    <div class="panel-header-section">
+                        <div>
+                            <h2 class="view-title">Intelligence Console Settings</h2>
+                            <p class="view-subtitle">Configure thresholds, API connections, GIS feeds, and AI parameters</p>
+                        </div>
+                    </div>
+
+                    <div class="settings-layout grid-2">
+                        <!-- AI Settings -->
+                        <div class="settings-block-card glass-card">
+                            <h3><i class="fa-solid fa-microchip cyan-text"></i> Cognitive Engine Configurations</h3>
+                            <div class="setting-row">
+                                <div class="set-lbl-desc">
+                                    <label for="set-confidence-threshold">AI Confidence Match Cutoff</label>
+                                    <p>Silence predictions with probability levels below this parameter.</p>
+                                </div>
+                                <div class="set-ctrl">
+                                    <input type="range" id="set-confidence-threshold" min="50" max="99" value="85">
+                                    <span class="font-telemetry font-bold cyan-text" id="confidence-range-val">85%</span>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="set-lbl-desc">
+                                    <label for="set-recidivism-weight">Recidivism Weight Parameter</label>
+                                    <p>Influences crime risk scoring based on offender timeline history.</p>
+                                </div>
+                                <div class="set-ctrl">
+                                    <select id="set-recidivism-weight" class="select-cyber">
+                                        <option value="high">Exponential Weighting (High)</option>
+                                        <option value="linear" selected>Linear Increment Weighting</option>
+                                        <option value="flat">Standard Category Weighted</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="set-lbl-desc">
+                                    <label>Automated Response Suggestion</label>
+                                    <p>Generate resource dispatch suggestions during live anomaly triggers.</p>
+                                </div>
+                                <div class="set-ctrl">
+                                    <label class="switch-toggle">
+                                        <input type="checkbox" id="set-auto-suggest" checked>
+                                        <span class="slider-round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- GIS Map Configurations -->
+                        <div class="settings-block-card glass-card">
+                            <h3><i class="fa-solid fa-earth-asia cyan-text"></i> Geospatial & Tile Parameters</h3>
+                            <div class="setting-row">
+                                <div class="set-lbl-desc">
+                                    <label for="set-map-tile">Map Tile Base Layer</label>
+                                    <p>Select GIS layer provider map visualization theme.</p>
+                                </div>
+                                <div class="set-ctrl">
+                                    <select id="set-map-tile" class="select-cyber">
+                                        <option value="dark-matter">CartoDB Dark Matter (Recommended)</option>
+                                        <option value="positron">CartoDB Positron (Light Mode Contrast)</option>
+                                        <option value="osm">OpenStreetMap Standard Base</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="set-lbl-desc">
+                                    <label for="set-gis-sync">GIS Telemetry Refresh Frequency</label>
+                                    <p>Fetch updated station incident logs at periodic intervals.</p>
+                                </div>
+                                <div class="set-ctrl">
+                                    <select id="set-gis-sync" class="select-cyber">
+                                        <option value="30">Real-time (30 Seconds)</option>
+                                        <option value="300" selected>Standard (5 Minutes)</option>
+                                        <option value="3600">Hourly Telemetry Sync</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="set-lbl-desc">
+                                    <label>Cluster Dense Incident Markers</label>
+                                    <p>Group adjacent markers on map views automatically.</p>
+                                </div>
+                                <div class="set-ctrl">
+                                    <label class="switch-toggle">
+                                        <input type="checkbox" id="set-clustering" checked>
+                                        <span class="slider-round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- System Security & Logs -->
+                        <div class="settings-block-card glass-card">
+                            <h3><i class="fa-solid fa-lock cyan-text"></i> Portal Security & System Logs</h3>
+                            <div class="setting-row">
+                                <div class="set-lbl-desc">
+                                    <label>Biometric Face Scan Simulation</label>
+                                    <p>Verify operator profile locks periodically.</p>
+                                </div>
+                                <div class="set-ctrl">
+                                    <label class="switch-toggle">
+                                        <input type="checkbox" id="set-biometric-verify" checked>
+                                        <span class="slider-round"></span>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="setting-row">
+                                <div class="set-lbl-desc">
+                                    <label>System Integrity Check</label>
+                                    <p>Verify connection streams to local police registries.</p>
+                                </div>
+                                <div class="set-ctrl">
+                                    <button class="btn btn-secondary btn-sm" onclick="runConsoleDiagnostic()"><i class="fa-solid fa-vial-virus"></i> Run Diagnostics</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Developer Reset / Mock Data Data Reset -->
+                        <div class="settings-block-card glass-card">
+                            <h3><i class="fa-solid fa-database cyan-text"></i> Database Diagnostic Tool</h3>
+                            <div class="setting-row">
+                                <div class="set-lbl-desc">
+                                    <label>Mock Database Realignment</label>
+                                    <p>Reset mock crime database back to default state.</p>
+                                </div>
+                                <div class="set-ctrl">
+                                    <button class="btn btn-danger btn-sm" onclick="resetAppDatabase()"><i class="fa-solid fa-rotate-left"></i> Rebuild Database</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- MAIN AI CHAT CHIP MODAL (Quick Floating Chat Button) -->
+    <div class="floating-chat-widget-box" id="floating-chat-widget">
+        <button class="chat-toggle-trigger" onclick="toggleFloatingChat()"><i class="fa-solid fa-robot"></i></button>
+        <div class="floating-chat-window glass-card" id="floating-chat-container" style="display:none;">
+            <div class="fc-header">
+                <span>KSP Tactical AI Assistant</span>
+                <button onclick="toggleFloatingChat()"><i class="fa-solid fa-minus"></i></button>
+            </div>
+            <div class="fc-body" id="float-messages-body">
+                <div class="chat-message bot">
+                    <div class="msg-avatar"><i class="fa-solid fa-robot"></i></div>
+                    <div class="msg-content">
+                        <p>Ask me something about the state crime telemetry, e.g. "Find hotspots".</p>
+                    </div>
+                </div>
+            </div>
+            <div class="fc-input">
+                <input type="text" id="float-user-input" placeholder="Type AI command...">
+                <button onclick="sendFloatingChatMessage()"><i class="fa-solid fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Leaflet JS Map Script CDN -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <!-- Chart.js Script CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Core Application Logic -->
+    <script src="app.js"></script>
+</body>
+</html>
