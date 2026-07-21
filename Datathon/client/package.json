@@ -1,0 +1,11 @@
+{
+  "name": "ksp-crime-analytics",
+  "version": "0.0.1",
+  "description": "Karnataka State Police AI-Driven Crime Analytics Platform",
+  "main": "index.html",
+  "scripts": {
+    "start": "python -m http.server 8080"
+  },
+  "homepage": "index.html"
+}
+
